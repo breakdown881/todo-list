@@ -10,19 +10,24 @@ export default new Vuex.Store({
     },
     mutations: {
         SET_ITEMS(state, items) {
-            state.items = items;
+            Vue.set(state, "items", items);
         },
         ADD_ITEM(state, item) {
             state.items.push(item);
         },
         TOGGLE_ITEM(state, itemId) {
             const item = state.items.find((item) => item.id === itemId);
-            console.log(item);
             item.completed = item.completed;
-            console.log(item)
         },
         REMOVE_ITEM(state, itemId) {
-            state.items = state.items.filter((item) => item.id !== itemId);
+            Vue.set(
+                state,
+                "items",
+                state.items.filter((item) => item.id !== itemId)
+            );
+        },
+        SET_TODO(state, item) {
+            Vue.set(state, "todo", item);
         },
     },
     actions: {
@@ -33,7 +38,7 @@ export default new Vuex.Store({
                     context.commit("SET_ITEMS", response.data);
                 })
                 .catch((error) => {
-                    console.error("Error fetching todos:", error);
+                    console.error("Error fetching items:", error);
                 });
         },
         addItem(context, item) {
@@ -45,7 +50,7 @@ export default new Vuex.Store({
                     context.commit("ADD_ITEM", response.data);
                 })
                 .catch((error) => {
-                    console.error("Error adding todo:", error);
+                    console.error("Error adding item:", error);
                 });
         },
         toggleItem(context, itemId, item) {
@@ -55,7 +60,7 @@ export default new Vuex.Store({
                     context.commit("TOGGLE_ITEM", response.data.id);
                 })
                 .catch((error) => {
-                    console.error("Error toggling todo:", error);
+                    console.error("Error toggling item:", error);
                 });
         },
         removeItem(context, itemId) {
@@ -65,7 +70,17 @@ export default new Vuex.Store({
                     context.commit("REMOVE_ITEM", itemId);
                 })
                 .catch((error) => {
-                    console.error("Error removing todo:", error);
+                    console.error("Error removing item:", error);
+                });
+        },
+        getItem(context, itemId) {
+            axios
+                .get(`api/item/${itemId}`)
+                .then((response) => {
+                    context.commit("SET_TODO", response.data);
+                })
+                .catch((error) => {
+                    console.error("Error fetching item:", error);
                 });
         },
     },

@@ -41,7 +41,11 @@ class ItemController extends Controller
      */
     public function show($id)
     {
-        //
+        $item = Item::find($id);
+        if($item) {
+            return $item;
+        }
+        return 'Item not found!';
     }
 
     /**

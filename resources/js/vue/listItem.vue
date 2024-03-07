@@ -5,9 +5,15 @@
             @change="updateCheck()"
             v-model="item.completed"
         />
-        <span :class="[item.completed ? 'completed' : '', 'itemText']">{{
-            item.name
-        }}</span>
+        <span :class="[item.completed ? 'completed' : '', 'itemText']">
+            <router-link
+                class="todo"
+                :to="'/item/' + item.id"
+                v-on:reloaditem="getItem()"
+            >
+                {{ item.name }}
+            </router-link>
+        </span>
         <button @click="removeItem()" class="trashcan">
             <font-awesome-icon icon="trash" />
         </button>
@@ -19,10 +25,13 @@ export default {
     props: ["item"],
     methods: {
         updateCheck() {
-            this.$store.dispatch('toggleItem', this.item.id);
+            this.$store.dispatch("toggleItem", this.item.id);
         },
         removeItem() {
-            this.$store.dispatch('removeItem', this.item.id);
+            this.$store.dispatch("removeItem", this.item.id);
+        },
+        getItem() {
+            this.$store.dispatch("getItem", this.item.id);
         },
     },
 };
@@ -50,5 +59,9 @@ export default {
     border: none;
     color: #ff0000;
     outline: none;
+}
+
+.todo:hover {
+    color: #0056b3;
 }
 </style>

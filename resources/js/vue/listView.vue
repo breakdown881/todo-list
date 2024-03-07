@@ -1,5 +1,9 @@
 <template>
     <div>
+        <div class="heading">
+            <h2 id="title">Todo List</h2>
+            <add-item-form v-on:reloadlist="getList()" />
+        </div>
         <div v-for="(item, index) in items" :keys="index">
             <list-item
                 :item="item"
@@ -15,11 +19,18 @@
 
 <script>
 import ListItem from "./listItem";
+import addItemForm from "./addItemForm.vue";
 import listItem from "./listItem.vue";
+
 export default {
-    // props: ["items"],
     components: {
+        addItemForm,
         ListItem,
+    },
+    methods: {
+        getList() {
+            return this.$store.dispatch("fetchItems")
+        },
     },
     computed: {
         items() {
@@ -35,6 +46,9 @@ export default {
             return this.$store.getters.remainingItems;
         },
     },
+    created() {
+        this.getList();
+    },
 };
 </script>
 
@@ -43,5 +57,13 @@ export default {
     background-color: #e6e6e6;
     padding: 5px;
     margin-top: 5px;
+}
+.heading {
+    background-color: #e6e6e6;
+    padding: 10px;
+}
+
+#title {
+    text-align: center;
 }
 </style>
